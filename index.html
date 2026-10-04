@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Catch the Stars</title>
+<style>
+body{margin:0;background:#15152f;color:white;font-family:Arial;text-align:center;overflow:hidden}
+h1{margin:18px 0 5px}#score{font-size:20px;margin:8px}
+canvas{background:linear-gradient(#18234b,#35104f);border:2px solid #ffffff44;border-radius:16px;touch-action:none;max-width:95vw}
+button{margin:10px;padding:12px 22px;border:0;border-radius:12px;background:#ffd43b;font-weight:bold;font-size:16px}
+</style>
+</head>
+<body>
+<h1>⭐ Catch the Stars</h1>
+<div id="score">Score: 0</div>
+<canvas id="game" width="360" height="520"></canvas>
+<p>Ungli se basket ko left-right chalao aur ⭐ pakdo!</p>
+<button onclick="start()">Start / Restart</button>
+<script>
+const c=document.getElementById('game'),x=c.getContext('2d');
+let b={x:150,y:470,w:60,h:22},s,score=0,on=true,last=0;
+function ns(){s={x:15+Math.random()*330,y:-20,v:3+Math.random()*2}}
+function draw(){x.clearRect(0,0,360,520);x.font='28px Arial';x.fillText('⭐',s.x-14,s.y+10);x.fillStyle='#ffd43b';x.fillRect(b.x,b.y,b.w,b.h);x.fillStyle='#ffec80';x.fillRect(b.x+10,b.y-7,b.w-20,8)}
+function loop(t){if(!on)return;let d=Math.min((t-last)/16.67,2);last=t;s.y+=s.v*d;if(s.y+10>b.y&&s.x>b.x&&s.x<b.x+b.w){score++;document.getElementById('score').textContent='Score: '+score;ns()}if(s.y>540)ns();draw();requestAnimationFrame(loop)}
+function start(){score=0;document.getElementById('score').textContent='Score: 0';ns();on=true;last=performance.now();requestAnimationFrame(loop)}
+function move(e){let r=c.getBoundingClientRect(),p=e.touches?e.touches[0]:e;b.x=Math.max(0,Math.min(300,p.clientX-r.left-30))}
+c.addEventListener('touchmove',move,{passive:true});c.addEventListener('mousemove',move);start();
+</script>
+</body></html>
